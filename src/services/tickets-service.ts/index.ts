@@ -24,20 +24,24 @@ async function getTickets(id: number) {
   return ticket;
 }
 
-async function postTickets(ticketTypeId: number, userId: number) {
+async function createTicket(ticketTypeId: number, userId: number) {
   if (!ticketTypeId) {
     throw badRequestError();
   }
 
-  const tickets = await ticketRepository.postTickets(ticketTypeId, userId);
-  console.log(tickets);
-  return tickets;
+  const user = await ticketRepository.getTicketByEnrollmentId(userId);
+
+  if (!user) {
+    throw notFoundError();
+  }
+
+  return ticketRepository.postTickets(ticketTypeId, userId);
 }
 
 const ticketService = {
   getTicketTypes,
   getTickets,
-  postTickets,
+  createTicket,
 };
 
 export default ticketService;

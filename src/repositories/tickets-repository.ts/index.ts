@@ -6,8 +6,8 @@ async function findTicketTypes() {
 }
 
 async function getTicketByEnrollmentId(userId: number) {
-  const user = await prisma.enrollment.findFirst({
-    where: { id: userId },
+  const user = await prisma.ticket.findFirst({
+    where: { Enrollment: { userId } },
   });
   return user;
 }
@@ -21,15 +21,14 @@ async function getTicketById(ticketId: number) {
 }
 
 async function postTickets(ticketTypeId: number, enrollmentId: number) {
-  const tickets = await prisma.ticket.create({
+  return await prisma.ticket.create({
     data: {
       status: 'RESERVED',
       ticketTypeId,
       enrollmentId,
     },
+    include: { TicketType: true },
   });
-  console.log(tickets);
-  return tickets;
 }
 
 const ticketRepository = {

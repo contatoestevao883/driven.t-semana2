@@ -93,7 +93,7 @@ model Ticket {
   updatedAt    DateTime     @updatedAt
   Payment      Payment[]
 
-    @@map("ticket")
+  @@map("ticket")
 }
 
 enum TicketStatus {
