@@ -28,8 +28,9 @@ async function postTickets(ticketTypeId: number, userId: number) {
   if (!ticketTypeId) {
     throw badRequestError();
   }
-  const tickets = await ticketRepository.postTickets(ticketTypeId, userId);
 
+  const tickets = await ticketRepository.postTickets(ticketTypeId, userId);
+  console.log(tickets);
   return tickets;
 }
 

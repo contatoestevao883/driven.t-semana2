@@ -27,13 +27,15 @@ export async function postTickets(req: AuthenticatedRequest, res: Response) {
   const { ticketTypeId } = req.body;
   try {
     const result = await ticketService.postTickets(ticketTypeId, userId);
-    return res.send(result);
+    return res.status(httpStatus.CREATED).send(result);
   } catch (error) {
     if (error.name === 'NotFoundError') {
       return res.sendStatus(httpStatus.NOT_FOUND);
     }
     if (error.name === 'Bad Request') {
       return res.sendStatus(httpStatus.BAD_REQUEST);
+    } else {
+      return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 }

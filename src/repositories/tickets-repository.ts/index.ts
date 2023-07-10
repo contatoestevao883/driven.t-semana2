@@ -20,14 +20,16 @@ async function getTicketById(ticketId: number) {
   return ticket;
 }
 
-async function postTickets(ticketTypeId: number, userId: number) {
-  return prisma.ticket.create({
+async function postTickets(ticketTypeId: number, enrollmentId: number) {
+  const tickets = await prisma.ticket.create({
     data: {
       status: 'RESERVED',
       ticketTypeId,
-      enrollmentId: userId,
+      enrollmentId,
     },
   });
+  console.log(tickets);
+  return tickets;
 }
 
 const ticketRepository = {
