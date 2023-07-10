@@ -1,6 +1,7 @@
 import ticketRepository from '@/repositories/tickets-repository.ts';
 import { notFoundError } from '@/errors';
 import { badRequestError } from '@/errors/bad-request-error';
+import enrollmentRepository from '@/repositories/enrollment-repository';
 
 async function getTicketTypes() {
   const ticketTypes = await ticketRepository.findTicketTypes();
@@ -15,7 +16,7 @@ async function getTickets(id: number) {
     throw notFoundError();
   }
 
-  const ticket = await ticketRepository.getTicketById(id);
+  const ticket = await ticketRepository.getTicketById(user.id);
 
   if (!ticket) {
     throw notFoundError();
@@ -29,13 +30,19 @@ async function createTicket(ticketTypeId: number, userId: number) {
     throw badRequestError();
   }
 
-  const user = await ticketRepository.getTicketByEnrollmentId(userId);
+  const user = await enrollmentRepository.findWithAddressByUserId(userId);
 
   if (!user) {
     throw notFoundError();
   }
 
-  return ticketRepository.postTickets(ticketTypeId, userId);
+  const ticket = await ticketRepository.postTickets(ticketTypeId, user.id);
+
+  if (ticket === null) {
+    throw notFoundError();
+  }
+
+  return ticket;
 }
 
 const ticketService = {
